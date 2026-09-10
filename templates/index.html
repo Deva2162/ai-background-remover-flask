@@ -1,95 +1,618 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>AI Background Remover & Image Enhancer Online | AI Image Studio</title>
-    <div class="creator-logo">Created by Devendra</div>
-    <meta name="description" content="Remove image background and enhance photos online free using AI. Fast and easy AI Image Studio tool for high-quality image editing.">
-    <meta name="keywords" content="background remover, AI background remover, free image enhancer, remove background online, image enhancer, AI image editor">
-    <meta name="author" content="AI Image Studio">
-    <!-- Mobile optimization -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- google link -->
-    <meta name="google-site-verification" content="1rEQFPccDEP56zzeA7YZX1VOVNXZ-Q9hFLwkFPilrRQ" />
-    <!-- Social sharing preview -->
-    <meta property="og:title" content="Free AI Background Remover & Image Enhancer">
-    <meta property="og:description" content="Remove background & enhance images instantly with AI Image Studio.">
-    <meta property="og:type" content="website">
-    <!-- favicon -->
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon-32x32.png') }}">
-    <!-- Link to CSS file -->
-    <link rel="stylesheet" href="../static/main.css"> <!-- Link to CSS file -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Me & My Love</title>
+
+<!--
+  ============================================================
+  QUICK CUSTOMIZE GUIDE — everything you'll want to change
+  ============================================================
+  1. Your names + tagline      → search for "EDIT: NAMES"
+  2. The day you got together  → search for "EDIT: START DATE"
+  3. Next anniversary/countdown target → search for "EDIT: COUNTDOWN TARGET"
+  4. Timeline story            → search for "EDIT: TIMELINE"
+  5. Photos                    → search for "EDIT: PHOTO" (swap the emoji
+     placeholder box for <img src="yourphoto.jpg"> — see README.md)
+  6. Closing love note         → search for "EDIT: LOVE NOTE"
+  ============================================================
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --cream:#FFF6EE;
+    --blush:#FFC9DE;
+    --coral:#FF7E9E;
+    --coral-deep:#F0577E;
+    --lavender:#C9AEEA;
+    --gold:#FFD166;
+    --plum:#40213D;
+    --plum-soft:#6E4A6C;
+    --paper:#FFFDF9;
+    --radius-lg: 28px;
+  }
+
+  *{ box-sizing:border-box; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--plum);
+    font-family:'Quicksand', sans-serif;
+    overflow-x:hidden;
+  }
+
+  h1,h2,h3, .display{
+    font-family:'Baloo 2', cursive;
+    margin:0;
+  }
+
+  /* ---------- floating hearts background ---------- */
+  #hearts{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:0;
+    overflow:hidden;
+  }
+  .heart{
+    position:absolute;
+    bottom:-10%;
+    font-size:20px;
+    opacity:0.55;
+    animation:rise linear infinite;
+    will-change:transform;
+  }
+  @keyframes rise{
+    0%{ transform:translateY(0) translateX(0) rotate(0deg); opacity:0; }
+    10%{ opacity:0.6; }
+    90%{ opacity:0.5; }
+    100%{ transform:translateY(-115vh) translateX(var(--drift,20px)) rotate(25deg); opacity:0; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .heart{ animation:none; display:none; }
+    *{ scroll-behavior:auto !important; }
+  }
+
+  section{
+    position:relative;
+    z-index:1;
+    padding:100px 24px;
+    max-width:760px;
+    margin:0 auto;
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    min-height:100svh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding-top:60px;
+    padding-bottom:60px;
+  }
+  .hero .kicker{
+    font-size:1.1rem;
+    color:var(--coral-deep);
+    font-weight:600;
+    letter-spacing:0.01em;
+    opacity:0;
+    transform:translateY(10px);
+    animation:pop 0.7s ease-out 0.1s forwards;
+  }
+  .hero h1{
+    font-size:clamp(2.6rem, 8vw, 5rem);
+    font-weight:800;
+    line-height:1.05;
+    color:var(--plum);
+    margin-top:8px;
+    opacity:0;
+    transform:translateY(16px) scale(0.97);
+    animation:pop 0.8s cubic-bezier(.2,.9,.25,1.2) 0.3s forwards;
+  }
+  .hero h1 .amp{
+    color:var(--coral);
+    display:inline-block;
+    animation:wiggle 2.6s ease-in-out 1.4s infinite;
+  }
+  .hero p.sub{
+    margin-top:18px;
+    font-size:1.15rem;
+    color:var(--plum-soft);
+    max-width:440px;
+    opacity:0;
+    animation:pop 0.7s ease-out 0.6s forwards;
+  }
+  @keyframes pop{
+    to{ opacity:1; transform:translateY(0) scale(1); }
+  }
+  @keyframes wiggle{
+    0%,100%{ transform:rotate(0deg); }
+    10%{ transform:rotate(-12deg); }
+    20%{ transform:rotate(10deg); }
+    30%{ transform:rotate(-6deg); }
+    40%{ transform:rotate(0deg); }
+  }
+
+  .scroll-cue{
+    margin-top:56px;
+    font-size:1.6rem;
+    opacity:0;
+    animation:pop 0.6s ease-out 1s forwards, bob 2s ease-in-out 1.6s infinite;
+    color:var(--coral-deep);
+  }
+  @keyframes bob{
+    0%,100%{ transform:translateY(0); }
+    50%{ transform:translateY(8px); }
+  }
+
+  /* ---------- section heading ---------- */
+  .section-head{
+    text-align:center;
+    margin-bottom:56px;
+  }
+  .section-head h2{
+    font-size:clamp(2rem, 5vw, 2.7rem);
+    color:var(--plum);
+  }
+  .section-head .wave{
+    display:block;
+    width:120px;
+    margin:14px auto 0;
+  }
+
+  /* ---------- countdown ---------- */
+  .countdown-wrap{
+    text-align:center;
+  }
+  .countdown-msg{
+    font-size:1.15rem;
+    color:var(--plum-soft);
+    margin-bottom:28px;
+  }
+  .countdown{
+    display:flex;
+    justify-content:center;
+    gap:14px;
+    flex-wrap:wrap;
+  }
+  .cd-box{
+    background:var(--paper);
+    border-radius:20px;
+    padding:20px 14px;
+    min-width:84px;
+    box-shadow:0 10px 0 var(--blush);
+    border:3px solid var(--plum);
+  }
+  .cd-box .num{
+    font-family:'Baloo 2', cursive;
+    font-size:2.2rem;
+    font-weight:700;
+    color:var(--coral-deep);
+    line-height:1;
+  }
+  .cd-box .label{
+    font-size:0.8rem;
+    color:var(--plum-soft);
+    margin-top:6px;
+    font-weight:600;
+  }
+
+  .days-together{
+    margin-top:40px;
+    display:inline-block;
+    background:var(--lavender);
+    color:var(--plum);
+    padding:12px 26px;
+    border-radius:999px;
+    font-weight:700;
+    font-size:1.05rem;
+    border:3px solid var(--plum);
+  }
+
+  /* ---------- timeline ---------- */
+  .timeline{
+    position:relative;
+    padding-top:10px;
+  }
+  .timeline::before{
+    content:"";
+    position:absolute;
+    left:50%;
+    top:0;
+    bottom:0;
+    width:4px;
+    background:repeating-linear-gradient(to bottom, var(--coral) 0 10px, transparent 10px 20px);
+    transform:translateX(-50%);
+  }
+  .t-item{
+    position:relative;
+    width:50%;
+    padding:0 40px 64px;
+    opacity:0;
+    transition:opacity 0.6s ease, transform 0.6s ease;
+  }
+  .t-item.visible{ opacity:1; transform:translateY(0) !important; }
+  .t-item:nth-child(odd){
+    left:0;
+    text-align:right;
+    transform:translate(-24px, 10px);
+  }
+  .t-item:nth-child(even){
+    left:50%;
+    text-align:left;
+    transform:translate(24px, 10px);
+  }
+  .t-dot{
+    position:absolute;
+    top:4px;
+    width:20px; height:20px;
+    background:var(--gold);
+    border:3px solid var(--plum);
+    border-radius:50%;
+    z-index:2;
+  }
+  .t-item:nth-child(odd) .t-dot{ right:-10px; }
+  .t-item:nth-child(even) .t-dot{ left:-10px; }
+  .t-card{
+    display:inline-block;
+    background:var(--paper);
+    border-radius:var(--radius-lg);
+    padding:20px 24px;
+    border:3px solid var(--plum);
+    max-width:320px;
+    text-align:left;
+  }
+  .t-date{
+    font-size:0.78rem;
+    font-weight:700;
+    color:var(--coral-deep);
+    background:var(--blush);
+    display:inline-block;
+    padding:3px 12px;
+    border-radius:999px;
+    margin-bottom:8px;
+  }
+  .t-card h3{
+    font-size:1.25rem;
+    margin-bottom:6px;
+    color:var(--plum);
+  }
+  .t-card p{
+    font-size:0.95rem;
+    color:var(--plum-soft);
+    line-height:1.5;
+    margin:0;
+  }
+
+  @media (max-width:640px){
+    .timeline::before{ left:20px; }
+    .t-item, .t-item:nth-child(even){
+      width:100%;
+      left:0;
+      text-align:left;
+      padding:0 0 48px 56px;
+    }
+    .t-item:nth-child(odd){ text-align:left; transform:translate(0,10px); }
+    .t-item:nth-child(odd) .t-dot, .t-item:nth-child(even) .t-dot{ left:10px; }
+    .t-card{ max-width:100%; }
+  }
+
+  /* ---------- gallery ---------- */
+  .gallery{
+    display:flex;
+    flex-wrap:wrap;
+    gap:28px;
+    justify-content:center;
+    padding-top:10px;
+  }
+  .polaroid{
+    background:var(--paper);
+    padding:14px 14px 44px;
+    border-radius:6px;
+    box-shadow:0 12px 24px rgba(64,33,61,0.16);
+    width:220px;
+    transition:transform 0.35s ease, box-shadow 0.35s ease;
+    position:relative;
+  }
+  .polaroid:hover{
+    transform:translateY(-10px) rotate(0deg) !important;
+    box-shadow:0 20px 30px rgba(64,33,61,0.22);
+    z-index:5;
+  }
+  .polaroid:nth-child(1){ transform:rotate(-6deg); }
+  .polaroid:nth-child(2){ transform:rotate(4deg); }
+  .polaroid:nth-child(3){ transform:rotate(-3deg); }
+  .polaroid:nth-child(4){ transform:rotate(6deg); }
+  .polaroid:nth-child(5){ transform:rotate(-5deg); }
+  .polaroid:nth-child(6){ transform:rotate(3deg); }
+
+  .photo-box{
+    width:100%;
+    aspect-ratio:1/1;
+    border-radius:2px;
+    background:linear-gradient(135deg,var(--blush),var(--lavender));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:2.4rem;
+    overflow:hidden;
+  }
+  .photo-box img{
+    width:100%; height:100%; object-fit:cover;
+  }
+  .polaroid figcaption{
+    position:absolute;
+    bottom:12px;
+    left:0; right:0;
+    text-align:center;
+    font-family:'Baloo 2', cursive;
+    font-size:0.95rem;
+    color:var(--plum-soft);
+  }
+
+  /* ---------- love note button ---------- */
+  .note-section{
+    text-align:center;
+  }
+  .note-btn{
+    font-family:'Baloo 2', cursive;
+    font-size:1.15rem;
+    font-weight:700;
+    color:var(--paper);
+    background:var(--coral-deep);
+    border:3px solid var(--plum);
+    padding:16px 36px;
+    border-radius:999px;
+    cursor:pointer;
+    box-shadow:0 8px 0 var(--plum);
+    transition:transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .note-btn:hover{ transform:translateY(-3px); }
+  .note-btn:active{
+    transform:translateY(4px);
+    box-shadow:0 4px 0 var(--plum);
+  }
+  .note-card{
+    max-width:520px;
+    margin:34px auto 0;
+    background:var(--paper);
+    border:3px solid var(--plum);
+    border-radius:var(--radius-lg);
+    padding:32px;
+    text-align:left;
+    font-size:1.05rem;
+    line-height:1.7;
+    color:var(--plum-soft);
+    display:none;
+    box-shadow:0 14px 0 var(--gold);
+  }
+  .note-card.show{ display:block; animation:pop 0.5s cubic-bezier(.2,.9,.25,1.2); }
+  .note-card .sign{
+    display:block;
+    margin-top:18px;
+    font-family:'Baloo 2', cursive;
+    color:var(--coral-deep);
+    font-size:1.15rem;
+  }
+
+  footer{
+    text-align:center;
+    padding:50px 24px 70px;
+    color:var(--plum-soft);
+    font-size:0.9rem;
+    position:relative;
+    z-index:1;
+  }
+  footer .heart-ico{ color:var(--coral); }
+</style>
 </head>
 <body>
-    <!-- Header section with title and Contact Us button -->
-    <header class="header">
-        <h2 class="header-title">Free AI Background Remover & Image Enhancer Online</h2>
-        <a href="{{ url_for('contact') }}" class="contact-link">
-            <button class="btn contact-btn">Contact Us</button>
-        </a>
-    </header>
 
-    <div class="container">
-        <div class="section bg-removal-section">
-            <h3>Remove Background</h3>
-            <form action="/remove_bg" method="post" enctype="multipart/form-data" class="form">
-                <input type="file" name="image" required class="file-input">
-                <button type="submit" class="btn submit-btn">Remove Background</button>
-            </form>
-        </div>
+<div id="hearts"></div>
 
-        <hr class="divider">
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="kicker">a little corner of the internet for</div>
+  <!-- EDIT: NAMES — change the two names below -->
+  <h1>Me <span class="amp">&amp;</span> My Love</h1>
+  <p class="sub">This page keeps a few of our favorite moments, our whole story so far, and a countdown to the next one.</p>
+  <div class="scroll-cue">↓</div>
+</section>
 
-        <div class="section enhancer-section">
-            <h3>Image Enhancer</h3>
-            <form action="/enhance_image" method="post" enctype="multipart/form-data" class="form">
-                <input type="file" name="image" required class="file-input">
-                <button type="submit" class="btn submit-btn">Enhance Image</button>
-            </form>
-        </div>
-
-        <hr class="divider">
-
-        <!-- Placeholder for displaying the generated image and download button (appears only after processing) -->
-        {% if image_data %}
-        <div class="section result-section">
-            <h3>Generated Image</h3>
-            <img src="data:image/{{ image_type }};base64,{{ image_data }}" alt="Generated Image" class="generated-image">
-            <br><br>
-            <a href="data:image/{{ image_type }};base64,{{ image_data }}" download="generated_image.{{ image_type }}" class="download-link">
-                <button class="btn download-btn">Download Image</button>
-            </a>
-        </div>
-        <hr class="divider">
-        {% endif %}
-
-        <!-- Error message placeholder (if something goes wrong) -->
-        {% if error %}
-        <div class="section error-section">
-            <p class="error-message">{{ error }}</p>
-        </div>
-        <hr class="divider">
-        {% endif %}
-
-        <div class="section ghibli-section">
-            <h3>Ghibli Style Image</h3>
-            <iframe
-                src="https://a57ca51a22068a78ee.gradio.live" 
-                width="100%"
-                height="400px"
-                class="ghibli-iframe">
-            </iframe>
-        </div>
+<!-- ================= COUNTDOWN ================= -->
+<section id="countdown">
+  <div class="section-head">
+    <h2>Counting down to us</h2>
+  </div>
+  <div class="countdown-wrap">
+    <p class="countdown-msg" id="countdown-msg">until our next anniversary</p>
+    <div class="countdown" id="countdown-boxes">
+      <div class="cd-box"><div class="num" id="cd-days">00</div><div class="label">days</div></div>
+      <div class="cd-box"><div class="num" id="cd-hours">00</div><div class="label">hours</div></div>
+      <div class="cd-box"><div class="num" id="cd-mins">00</div><div class="label">mins</div></div>
+      <div class="cd-box"><div class="num" id="cd-secs">00</div><div class="label">secs</div></div>
     </div>
+    <div class="days-together" id="days-together">we've loved each other for — days</div>
+  </div>
+</section>
 
-    <script src="../static/main.js"></script> <!-- Link to JS file -->
+<!-- ================= TIMELINE ================= -->
+<section id="story">
+  <div class="section-head">
+    <h2>Our story so far</h2>
+  </div>
+  <div class="timeline" id="timeline">
+    <!-- EDIT: TIMELINE — add, remove, or rewrite these moments -->
+    <div class="t-item">
+      <span class="t-dot"></span>
+      <div class="t-card">
+        <span class="t-date">the beginning</span>
+        <h3>The day we met</h3>
+        <p>Write about how it happened — where you were, what you noticed first, how it felt.</p>
+      </div>
+    </div>
+    <div class="t-item">
+      <span class="t-dot"></span>
+      <div class="t-card">
+        <span class="t-date">first date</span>
+        <h3>Somewhere unforgettable</h3>
+        <p>What did you do, what did you talk about, what made you want a second one?</p>
+      </div>
+    </div>
+    <div class="t-item">
+      <span class="t-dot"></span>
+      <div class="t-card">
+        <span class="t-date">made it official</span>
+        <h3>Us, officially</h3>
+        <p>The moment you decided to do this together, on purpose.</p>
+      </div>
+    </div>
+    <div class="t-item">
+      <span class="t-dot"></span>
+      <div class="t-card">
+        <span class="t-date">a favorite memory</span>
+        <h3>A trip, a night, a nothing-special day that mattered</h3>
+        <p>Pick one memory that still makes you smile and tell it here.</p>
+      </div>
+    </div>
+    <div class="t-item">
+      <span class="t-dot"></span>
+      <div class="t-card">
+        <span class="t-date">today &amp; onward</span>
+        <h3>Still choosing each other</h3>
+        <p>Say something about where you are now, and what you're looking forward to.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= GALLERY ================= -->
+<section id="gallery">
+  <div class="section-head">
+    <h2>Our favorite moments</h2>
+  </div>
+  <div class="gallery">
+    <!-- EDIT: PHOTO — replace each .photo-box emoji div with:
+         <img src="photos/yourphoto.jpg" alt="caption">
+         Keep the surrounding .polaroid + figcaption structure. -->
+    <figure class="polaroid"><div class="photo-box">📷</div><figcaption>add a photo</figcaption></figure>
+    <figure class="polaroid"><div class="photo-box">💌</div><figcaption>add a photo</figcaption></figure>
+    <figure class="polaroid"><div class="photo-box">🌅</div><figcaption>add a photo</figcaption></figure>
+    <figure class="polaroid"><div class="photo-box">🎉</div><figcaption>add a photo</figcaption></figure>
+    <figure class="polaroid"><div class="photo-box">🐾</div><figcaption>add a photo</figcaption></figure>
+    <figure class="polaroid"><div class="photo-box">☕</div><figcaption>add a photo</figcaption></figure>
+  </div>
+</section>
+
+<!-- ================= LOVE NOTE ================= -->
+<section class="note-section">
+  <div class="section-head">
+    <h2>One more thing</h2>
+  </div>
+  <button class="note-btn" id="note-btn" type="button">tap for a little note 💌</button>
+  <div class="note-card" id="note-card">
+    <!-- EDIT: LOVE NOTE — write your real message here -->
+    <p>I don't know how to say this without sounding like every love song ever, so I'll just say it plainly: you make ordinary days feel worth remembering. Thank you for choosing me, again and again.</p>
+    <span class="sign">— yours, always</span>
+  </div>
+</section>
+
+<footer>
+  made with <span class="heart-ico">♥</span> for us
+</footer>
+
+<script>
+  // ---------- floating hearts ----------
+  const heartsContainer = document.getElementById('hearts');
+  const heartEmojis = ['💗','💕','💖','💓'];
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!prefersReduced){
+    const count = window.innerWidth < 640 ? 10 : 18;
+    for(let i=0;i<count;i++){
+      const h = document.createElement('div');
+      h.className = 'heart';
+      h.textContent = heartEmojis[Math.floor(Math.random()*heartEmojis.length)];
+      h.style.left = Math.random()*100 + 'vw';
+      h.style.setProperty('--drift', (Math.random()*80-40) + 'px');
+      h.style.animationDuration = (10 + Math.random()*12) + 's';
+      h.style.animationDelay = (Math.random()*14) + 's';
+      h.style.fontSize = (14 + Math.random()*16) + 'px';
+      heartsContainer.appendChild(h);
+    }
+  }
+
+  // ---------- EDIT: START DATE ----------
+  // The date you got together (year, month, day). Month is 0-indexed (0=Jan).
+  const startDate = new Date(2023, 0, 14); // <-- change this
+
+  // ---------- EDIT: COUNTDOWN TARGET ----------
+  // Set this to your next anniversary / next big date. This auto-rolls to
+  // next year once it passes, so you only need to set it once.
+  function getNextAnniversary(){
+    const now = new Date();
+    let next = new Date(now.getFullYear(), startDate.getMonth(), startDate.getDate());
+    if(next < now){ next.setFullYear(next.getFullYear()+1); }
+    return next;
+  }
+
+  function updateCountdown(){
+    const target = getNextAnniversary();
+    const now = new Date();
+    let diff = target - now;
+    if(diff < 0) diff = 0;
+    const days = Math.floor(diff/(1000*60*60*24));
+    const hours = Math.floor((diff/(1000*60*60))%24);
+    const mins = Math.floor((diff/(1000*60))%60);
+    const secs = Math.floor((diff/1000)%60);
+    document.getElementById('cd-days').textContent = String(days).padStart(2,'0');
+    document.getElementById('cd-hours').textContent = String(hours).padStart(2,'0');
+    document.getElementById('cd-mins').textContent = String(mins).padStart(2,'0');
+    document.getElementById('cd-secs').textContent = String(secs).padStart(2,'0');
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  // days together counter
+  function updateDaysTogether(){
+    const now = new Date();
+    const diffDays = Math.floor((now - startDate)/(1000*60*60*24));
+    document.getElementById('days-together').textContent =
+      `we've loved each other for ${diffDays.toLocaleString()} days`;
+  }
+  updateDaysTogether();
+
+  // ---------- timeline reveal on scroll ----------
+  const items = document.querySelectorAll('.t-item');
+  const observer = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold:0.25 });
+  items.forEach(item=>observer.observe(item));
+
+  // ---------- love note toggle ----------
+  const noteBtn = document.getElementById('note-btn');
+  const noteCard = document.getElementById('note-card');
+  noteBtn.addEventListener('click', ()=>{
+    const isShown = noteCard.classList.toggle('show');
+    noteBtn.textContent = isShown ? 'close 💗' : 'tap for a little note 💌';
+    if(isShown){ noteCard.scrollIntoView({behavior:'smooth', block:'center'}); }
+  });
+</script>
+
 </body>
-
 </html>
-
-
-
-
-
-
-
